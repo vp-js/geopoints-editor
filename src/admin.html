@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Config page</title>
+
+<!--
+<script src="app-config.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/model.js"></script>
+<script src="js/importExport.js"></script>
+
+<link rel="stylesheet" href="components/tabbed/tabbed.less">
+
+<script src="components/points-map/points-map.js"></script>
+
+<link rel="stylesheet" href="components/point-data/point-data.less">
+<script src="components/point-data/point-data.js"></script>
+
+<link rel="stylesheet" href="components/image-upload/image-upload.less">
+<script src="components/image-upload/image-upload.js"></script>
+
+<link rel="stylesheet" href="components/info-block/info-block.less">
+<script src="components/info-block/info-block.js"></script>
+
+<link rel="stylesheet" href="components/points-editor/points-editor.less">
+<script src="components/points-editor/points-editor.js"></script>
+
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/theme.css">
+
+ -->
+
+<link rel="stylesheet" href="css/yms-app.css">
+<script src="js/yms-admin.min.js"></script>
+
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+
+<link rel="stylesheet" href="lib/kladr/jquery.kladr.min.css">
+<script src="lib/kladr/jquery.kladr.min.js"></script>
+
+<script>
+  ymaps.ready(ymsApp.init, function(error) {alert("Error loading yandex maps: " + error.message)});
+</script>
+
+</head>
+
+
+<body style="overflow-y: scroll;">
+  <header>
+    <nav>
+      <a class="menu-logo" href="/">Geopoints editor</a>
+      <ul class="menu-main">
+        <li>
+          <a href="main.html">Main page</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <aside class="apphelp tabbed hidden-md">
+    <input class="tabbed__opener" type="checkbox" id="tabbedopener" checked>
+    <label class="tabbed__bookmark" for="tabbedopener"></label>
+    <article class="tabbed__content">
+      <input class="tabbed__switch" name="tabbed" id="lang1" type="radio" checked>
+      <h4 class="tabbed__header"><label for="lang1">Ru</label></h4>
+      <section class="tabbed__panel" lang="ru">
+        <h3 class="tabbed__section-header">Справка:</h3>
+        <p><img src="images/buttons/add_icon.jpg" alt="c"> - данный режим позволяет создавать объекты по клику на карте
+          Объекты создаются по одному. Для создания нового нужно сохранить текущий.</p>
+        <p><img src="images/buttons/edit_icon.png" alt="e"> - режим, при котором выбор объекта включает его редактирование</p>
+        <p><img src="images/buttons/import_icon.png" alt="i"> - импорт объектов из csv файла</p>
+        <p><img src="images/buttons/export_icon.png" alt="e"> - экспорт объектов в csv файл</p>
+      </section>
+      <input class="tabbed__switch" name="tabbed" id="lang2" type="radio">
+      <h4 class="tabbed__header"><label for="lang2">En</label></h4>
+      <section class="tabbed__panel" lang="en">
+        <h3 class="tabbed__section-header">Info:</h3>
+        <p><img src="images/buttons/add_icon.jpg" alt="c"> - cteate point</p>
+        <p><img src="images/buttons/edit_icon.png" alt="e"> - edit point</p>
+        <p><img src="images/buttons/import_icon.png" alt="i"> - import points from csv</p>
+        <p><img src="images/buttons/export_icon.png" alt="e"> - export points to csv</p>
+      </section>
+    </article>
+  </aside>
+  <main>
+    <div class="map-container">
+      <div id="ymsMap"></div>
+    </div>
+    <div class="pointseditor-pointdata point-data-wrapper">
+      <form class="point-data" name="point_data" data-mode="hidden" autocomplete="off">
+        <label>Name:
+          <input type="text" name="name" required data-required-msg="The field is required" title="Name is required"/>
+        </label>
+        <label class="hidden-sd">Description:
+          <textarea name="description" maxlength="100"></textarea>
+        </label>
+        <label>Category:
+          <select name="category" title="Please provide category" autocomplete="off"></select>
+        </label>
+        <label>Town:
+          <input type="text" name="town"/>
+        </label>
+        <label>Address:
+          <input type="text" name="address"/>
+        </label>
+        <label>Phone:
+          <input type="tel" name="phone" placeholder="+7 012 345-67-89"
+            title="Please provide correct telephone number"
+            pattern="(\+7[\s]?\d{3}|\+375[\s]?\d{2})[\s]?\d{3}[-]?\d{2}[-]?\d{2}"/>
+        </label>
+        <label>Mail:
+          <input type="email" name="mail" placeholder="email@example.com"
+            title="Please provide correct e-mail address"/>
+        </label>
+        <label>Website:
+          <input type="url" name="website" placeholder="http://site.com" title="Please provide correct URL"/>
+        </label>
+        <label class="hidden-sd">Opening time:
+          <input type="time" name="openingTime"/>
+        </label>
+        <label title="File should be an image and not larger than 1 Mb" class="imgupload-container hidden-sd">
+          <div class="imgupload-btnslot">
+            Image:
+            <input type="file" name="photo" accept="image/jpeg,image/png,image/gif">
+            <button type="button" class="btn imgupload-btn">Upload</button>
+          </div>
+          <div class="imgupload-imgslot"></div>
+        </label>
+        <button name="action" type="submit" value="save" class="btn-save">Save</button><button
+          name="action" type="submit" value="remove" class="btn-remove effect-sweep" formnovalidate>Remove</button>
+      </form>
+      <div class="point-data-placeholder">
+        <span>Point data</span>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <nav>
+      <div class="copyright">VP</div>
+      <div class="about">2018</div>
+    </nav>
+  </footer>
+</body>
+</html>

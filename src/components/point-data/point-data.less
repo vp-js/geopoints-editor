@@ -1,0 +1,108 @@
+/* Form */
+
+.point-data-wrapper {
+  position: relative;
+}
+.point-data {
+  max-width: 300px;
+}
+.point-data input,
+.point-data textarea,
+.point-data select {
+  box-sizing: border-box;
+  max-width: 200px;
+}
+.point-data textarea {
+  height: 50px;
+}
+.point-data label {
+  display: block;
+  margin: 0.5em 0;
+}
+.point-data > button {
+  width: 50%;
+}
+.point-data option:not([disabled]) {
+  font-weight: bold;
+}
+
+.point-data[data-mode="hidden"] {
+  visibility: hidden;
+}
+.point-data:not([data-mode="edit"]) .btn-remove {
+  visibility: hidden;
+}
+.point-data:not([data-mode="hidden"]) + .point-data-placeholder {
+  display: none;
+}
+
+.point-data-placeholder {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  opacity: 0.1;
+  background-color: aqua;
+  filter: blur(1px);
+  background-image: linear-gradient(to top right, aqua, orange);
+}
+.point-data-placeholder > span:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.point-data-placeholder > span {
+  font-size: 2em;
+}
+
+/*:not(:focus):invalid { }*/
+
+.img-custom-validation {
+  outline: solid 2px red;
+  transition: .4s;
+}
+
+/* clear default rules */
+/*
+.point-data input:invalid {
+  outline: none;
+}
+}*/
+/* add highlighting in opera*/
+/*.point-data input:not(:focus):invalid {
+  outline: 2px solid red;
+}*/
+
+@media (min-width: 769px) {
+  .point-data input,
+  .point-data textarea,
+  .point-data select {
+    display: block;
+    width: 100%;
+    margin-top: 2px;
+  }
+}
+
+@media (max-width: 768px) {
+  .point-data[data-mode="hidden"] {
+    display: none;
+  }
+  .point-data-placeholder {
+    display: none;
+  }
+  .point-data label {
+    text-align: right;
+  }
+  .point-data label.hidden-sd {
+    display: none;
+  }
+  .point-data input,
+  .point-data textarea,
+  .point-data select {
+    float: right;
+    width: 70%;
+    margin: 0 0.5em;
+  }
+}

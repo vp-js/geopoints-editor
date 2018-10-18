@@ -1,0 +1,12 @@
+lat,long,category,name,description,town,address,phone,website,mail,openingTime,iconContent
+54.78435,32.0355535,stadium,Spartak,Spartak stadium,Smolensk,Dzerzhinskogo st,,,,08:00,Spartak
+54.7814914,32.0348293,azs,Rosneft,Zapravrka,Smolensk,Nahimova st,+7 012 345-67-89,,azs@example.com,07:30,Rosneft
+54.7810511,32.0131731,carWash,Romashka,Romashka car wash,Smolensk,Nahimova st 17a,,,,06:20,Romashka
+54.7723441,32.0328983,bank,Gazenergo,Gazenergobank,Smolensk,Nikolaeva st 27a,+7 111 222-33-44,,,09:30,Gazenergo
+54.7993499,32.0629995,azs,Belneft,,Smolensk,,,,,06:00,Belneft
+54.8085038,32.0419237,pharmacy,Ромашка,,Smolensk,Frunze st,+7 111 111-11-11,,,,Ромашка
+54.7597402,32.0702145,pharmacy,Аптека №1,,Smolensk,Aptechnaya st,,,,,Аптека №1
+54.8653015,32.0266233,azs,Lukoil,Lorem ipsum dolor sit amet consectetur adipiscing elit. Cras non nibh enim. Duis ac massa vel magna,Pechersk,,,,,,Lukoil
+54.8611778,31.9790661,azs,Dial,,Дивасы,,,http://yandex.ru,,01:20,Dial
+54.7533413,32.0736909,azs,M10,,Smolensk,,+7 222 222-22-22,http://yandex.ru,,,M10
+54.8768911,32.026874,azs,Eterno,,,,,,,05:55,Eterno

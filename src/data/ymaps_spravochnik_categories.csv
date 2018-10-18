@@ -1,0 +1,12 @@
+category,parentId,name,ymapsPreset,image
+auto,0,Auto,islands#blueAutoCircleIcon,car-icon.png
+pool,sport,Swimming pool,islands#bluePoolCircleIcon,s_pool.png
+azs,auto,Fuel station,islands#darkOrangeFuelStationCircleIcon,fuel_station.png
+health,0,Health,islands#blueMedicalCircleIcon,Doctor-Briefcase-red-icon.png
+remont,auto,Auto repair,islands#nightRepairShopCircleIcon,Car-Repair-icon.png
+stadium,sport,Stadium,islands#yellowRunCircleIcon,Soccer-icon.png
+sport,0,Sport,islands#orangeSportCircleIcon,f1.png
+carWash,auto,Car wash,islands#darkBlueCarWashCircleIcon,Car-Washing-icon.png
+pharmacy,health,Pharmacy,islands#greenMedicalCircleIcon,medicine-box-2-icon.png
+finance,0,Finance,islands#oliveMoneyCircleIcon,bank2.png
+bank,finance,Bank,blackMoneyCircleIcon,bank1.jpg

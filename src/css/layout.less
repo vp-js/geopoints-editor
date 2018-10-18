@@ -1,0 +1,131 @@
+@main-area: 750px;
+@main-color: lightseagreen;
+@header-height: 4rem;
+
+@medium: ~"(min-width: 768px)";
+@minimum: ~"(min-width: 280px)";
+
+
+html {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  background-image: url("../images/background/topography.png");
+  background-attachment: fixed;
+}
+
+header {
+  background-color: @main-color;
+}
+nav {
+  box-sizing: border-box;
+  max-width: @main-area;
+
+  padding: 0 1em;
+  margin: auto;
+  color: azure;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+   user-select: none;
+
+  @media @minimum {
+    line-height: 2.5rem;
+    font-size: 1.5rem;
+  }
+  @media @medium {
+    line-height: @header-height;
+    font-size: 2rem;
+  }
+}
+nav a {
+  color: inherit;
+}
+.menu-logo {
+  font-family: Arial;
+}
+.menu-main {
+  float: right;
+}
+.menu-main a {
+  display: block;
+  padding: 0 4px;
+  font-size: 0.6em;
+}
+.menu-main a:hover {
+  background-color: #208E88;
+}
+
+
+main {
+  display: flex;
+  box-sizing: border-box;
+  border: 2px solid ghostwhite;
+  background-color: white;
+
+  @media @minimum {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  @media @medium {
+    width: @main-area;
+    padding: 1em;
+    margin: 1em auto;
+  }
+}
+
+
+aside {
+  position: absolute;
+  top: @header-height;
+  box-sizing: border-box;
+  max-width: 200px;
+}
+
+.apphelp {
+  section {
+    box-sizing: border-box;
+    padding: 1em;
+    img {
+      width: 1em;
+    }
+  }
+}
+
+.dyn-options {
+  right: 0;
+  vertical-align: top;
+  max-width: 200px;
+  padding: 0 20px 20px;
+  border: 1px solid darkslategray;
+  background-color: white;
+  label {
+    display: block;
+  }
+}
+
+
+footer {
+  margin-top: auto;
+  background-color: @main-color;
+  cursor: default;
+}
+.copyright {
+  float: left;
+}
+.about {
+  float: right;
+}
+
+
+@media (max-width: 1200px) {
+  .hidden-md {
+    display: none;
+  }
+}

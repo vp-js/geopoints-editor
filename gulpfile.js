@@ -25,20 +25,26 @@ const dev = false;
 var adminSourceJS = [
   "src/app-config.js",
   "src/components/points-editor/points-editor.js",
-  "src/components/points-map/points-map.js",
   "src/components/point-data/point-data.js",
   "src/components/image-upload/image-upload.js",
   "src/components/info-block/info-block.js",
-  "src/js/storage.js",
-  "src/js/model.js",
-  "src/js/importExport.js",
+  "src/js/base/storage.js",
+  "src/js/base/model.js",
+  "src/js/services/categoryService.js",
+  "src/js/services/pointService.js",
+  "src/js/services/importExport.js",
+  "src/js/map-providers/ymapsProvider.js",
+  "src/js/admin.js"
   ];
 
 var mainSourceJS = [
   "src/app-config.js",
-  "src/js/importExport.js",
-  "src/js/storage.js",
-  "src/js/model.js",
+  "src/js/services/pointService.js",
+  "src/js/services/categoryService.js",
+  "src/js/services/importExport.js",
+  "src/js/base/storage.js",
+  "src/js/base/model.js",
+  "src/components/main-map/main-map.js",
   "src/components/categories-list/categories-list.js",
   "src/js/main.js"
   ];
@@ -112,7 +118,7 @@ gulp.task('data', function() {
     .pipe(gulp.dest("dist/data"));
 });
 gulp.task('lib', function() {
-  gulp.src("src/lib/*")
+  gulp.src("src/lib/**")
     .pipe(gulp.dest("dist/lib"));
 });
 
@@ -129,7 +135,7 @@ gulp.task('clean', function() {
 });
 
 gulp.task('default', ['clean'], function() {
-    gulp.start('html', 'styles', 'adminScripts', 'mainScripts', 'imagemin', 'data');
+    gulp.start('html', 'styles', 'adminScripts', 'mainScripts', 'imagemin', 'data', 'lib');
 });
 
 /*

@@ -1,160 +1,93 @@
 "use strict"
 
-// TODO refactor all
-function CategoriesList(options, config) {
-  var innerEventsManager = (function() {
-    var handlers = {};
-    return {
-      subscribe(type, handler) {
-        handlers[type] || (handlers[type] = []);
-        handlers[type].push(handler);
-      },
-      notify(type, data) {
-        handlers[type].forEach(f => f(data));
-      }
-    }
-  })();
-  // var innerEvents = {
-  //   handlers: {},
-  //   subscribe: function(type, handler) {
-  //     handlers[type] || handlers[type] = [];
-  //     handlers[type].push(handler);
-  //   },
-  // };
-
-  var bAnimated = true;
-  var bImagesRendered;
-
+function CategoriesList(options = {ctgs: []}) {
   var elem = document.createElement("div");
-  elem.className = "categories";
+
   function getElem() {
-    if (!options.ctgs || !options.ctgs.length) {
-      elem.textContent = "No categories availabe";
-    } else if (!elem.firstElementChild) {
-      render();
-    }
+    if (!elem.firstElementChild) render(options.ctgs);
     return elem;
   }
 
-  // fix for demo
-  function searchCtg(id) {
-    for (var i = 0; i < options.ctgs.length; i++) {
-      if (options.ctgs[i].category == id) {
-        return options.ctgs[i];
-      }
-      for (var j = 0; j < options.ctgs[i].subcategories.length; j++) {
-        var ctg = options.ctgs[i].subcategories[j];
-        if (ctg.category == id) {
-          return ctg;
-        }
-      };
-    };
-  }
-
-  function toggleImages(bShow) {
-    if (!bImagesRendered) {
-      var ctgElems = elem.getElementsByClassName("category");
-      for (var i = 0; i < ctgElems.length; i++) {
-        var ctg = searchCtg(ctgElems[i].dataset.category);
-        var categoryImage = document.createElement("img");
-        categoryImage.src = config.imgFolder + (ctg.image || config.imageStub);
-        categoryImage.onerror = function(e) {
-          e.target.src = config.imgFolder + config.imageStub;
-        }
-        //categoryImage.alt = "Error in image path";
-        ctgElems[i].insertBefore(categoryImage, ctgElems[i].firstElementChild);
-      }
-      bImagesRendered = true;
+  function render(ctgs) {
+    if (!ctgs.length) {
+      elem.textContent = "No categories availabe";
+      return;
     }
-    if (bShow) {
-      elem.classList.remove("images-hidden");
-    } else {
-      elem.classList.add("images-hidden");
-    }
-  }
+    elem.className = "categories images-hidden";
+    elem.appendChild(renderList(ctgs, true));
 
-  function render() {
-    renderList(options.ctgs, elem);
-    if (elem.firstElementChild) elem.firstElementChild.classList.remove("is-collapsed");
+    function renderList(ctgs, isRoot) {
+      if (!ctgs.length) return;
 
-    function renderList(ctgs, prevElem) {
       var ul = document.createElement("ul");
-      ul.classList.add("is-collapsed");
-      ul.classList.add(prevElem == elem ? "categories-list" : "subcategories-list"); // fix for demo
+      if (isRoot) {
+        ul.classList.add("categories-list");
+      } else {
+        ul.classList.add("subcategories-list");
+        ul.classList.add("is-collapsed");
+      }
+
       for (var i = 0; i < ctgs.length; i++) {
         var li = document.createElement("li");
+        li.insertAdjacentHTML("beforeEnd", ctgHeaderDivTemplate(ctgs[i]));
 
-        // create secton header with name and image
-        var headerDiv = document.createElement("div");
-        headerDiv.classList.add("category");
-        headerDiv.setAttribute("data-category", ctgs[i].category);
-        //headerDiv.id = ctgs[i].category;
-        if (options.useCustomImages) {
-          var categoryImage = document.createElement("img");
-          categoryImage.src = config.imgFolder + (ctgs[i].image || config.imageStub);
-          categoryImage.onerror = function(e) {
-            e.target.src = config.imgFolder + config.imageStub;
-          };
-          //categoryImage.alt = "Error in image path";
-          headerDiv.appendChild(categoryImage);
-        }
-        var a = document.createElement("a");
-        a.textContent = ctgs[i].name;
-        //a.setAttribute("href", "#");
-        headerDiv.appendChild(a);
-        li.appendChild(headerDiv);
+        var subctgs = renderList(ctgs[i].subcategories);
+        if (subctgs) li.appendChild(subctgs);
 
-        // create category points
-        if (ctgs[i].points && ctgs[i].points.length) {
-          var pointUl = document.createElement("ul");
-          pointUl.className = "category-items";
-          pointUl.classList.add("is-collapsed");
-          for (var j = 0; j < ctgs[i].points.length; j++) {
-            var pointLi = document.createElement("li");
-            pointLi.textContent = ctgs[i].points[j].name;
-            pointUl.appendChild(pointLi);
-          }
-          li.appendChild(pointUl);
-        }
+        if (ctgs[i].points && ctgs[i].points.length)
+          li.insertAdjacentHTML("beforeEnd", ctgPointsListTemplate(ctgs[i].points));
 
-        renderList(ctgs[i].subcategories, li);
         ul.appendChild(li);
       }
-      if (ctgs.length) prevElem.appendChild(ul); // no need in empty lists
+
+      return ul;
+    }
+
+    function ctgHeaderDivTemplate(ctg) {
+      var resStr =
+        `<div class="category" data-category="${ctg.category}">
+          <img src="${categoryService.getCategoryImage(ctg.category)}" alt="">
+          <a>${ctg.name}</a>
+        </div>`;
+      return resStr;
+    }
+    function ctgPointsListTemplate(points) {
+      var resStr =
+        `<ul class="category-items is-collapsed">
+          ${points.map(point => `<li>${point.name}</li>`).join("")}
+        </ul>`;
+      return resStr;
     }
   }
+
 
   elem.addEventListener("click", function(e) {
     if (e.target.classList.contains("category")) {
-      toggle(e.target);
+      var ul = e.target.nextElementSibling;
+      var category = e.target.dataset.category;
+      if (ul) toggle(ul, category);
     } else if (e.target.tagName == "LI") {
+      var ctgHeader = e.target.parentElement.previousElementSibling;
+      if (!ctgHeader) return; // it's not item LI
       var name = e.target.textContent;
-      var category = e.target.parentElement.previousElementSibling.dataset.category;
+      var category = ctgHeader.dataset.category;
       innerEventsManager.notify("selectItem", {name, category});
     }
   });
 
-
-  function toggle(headerDiv) {
-    var ul = headerDiv.nextElementSibling;
-    if (!ul) return;
-
-    var category = headerDiv.dataset.category;
+  function toggle(ul, category) {
     if (ul.classList.contains("is-collapsed")) {
-      expandList(ul);
+      if (isAnimated) expandList(ul);
+      else ul.classList.remove("is-collapsed");
       innerEventsManager.notify("showCategory", {category});
     } else {
-      collapseList(ul);
+      if (isAnimated) collapseList(ul);
+      else ul.classList.add("is-collapsed");
       innerEventsManager.notify("hideCategory", {category});
     }
-  };
+  }
 
   function collapseList(ul) {
-    if (!ul) return;
-    if (!bAnimated) {
-      ul.classList.add("is-collapsed");
-      return;
-    }
     var ulHeight = ul.offsetHeight;
     var ulTransition = ul.style.transition;
     ul.style.transition = "";
@@ -165,8 +98,8 @@ function CategoriesList(options, config) {
         ul.style.height = 0;
 
         // works correctly without it, but need for consistency and to fix for manual animation toggle
-        ul.addEventListener("transitionend", function f() {
-          ul.removeEventListener("transitionend", f /*arguments.callee*/);
+        ul.addEventListener("transitionend", function ontransitionend() {
+          ul.removeEventListener("transitionend", ontransitionend);
           ul.style.height = null;
           ul.classList.add("is-collapsed");
         });
@@ -175,33 +108,37 @@ function CategoriesList(options, config) {
   }
 
   function expandList(ul) {
-    if (!ul) return;
-    if (!bAnimated) {
-      ul.classList.remove("is-collapsed");
-      return;
-    }
     ul.style.height = ul.scrollHeight + "px";
-    ul.addEventListener("transitionend", function f() {
-      ul.removeEventListener("transitionend", f /*arguments.callee*/);
+    ul.addEventListener("transitionend", function ontransitionend() {
+      ul.removeEventListener("transitionend", ontransitionend);
       ul.style.height = null;
       ul.classList.remove("is-collapsed");
     });
   }
 
 
-  /*this.isAnimated = function() {
-    return bAnimated;
-  }
-  this.setAnimated = function(a) {
-    bAnimated = a;
-  }*/
+  // TODO extract to component?
+  var innerEventsManager = function() {
+    var handlers = {};
+    return {
+      subscribe(type, handler) {
+        handlers[type] || (handlers[type] = []);
+        handlers[type].push(handler);
+      },
+      notify(type, data) {
+        handlers[type].forEach(f => f(data));
+      }
+    }
+  }();
 
+
+  var isAnimated = true;
   Object.defineProperty(this, "animated", {
-    get: () => bAnimated,
-    set: (value) => (bAnimated = value)
+    get: () => isAnimated,
+    set: (value) => (isAnimated = value)
   });
 
   this.getElem = getElem;
-  this.toggleImages = toggleImages;
+  this.toggleImages = () => elem.classList.toggle("images-hidden");
   this.subscribe = innerEventsManager.subscribe;
 }

@@ -4,15 +4,19 @@
   <meta charset="utf-8"/>
   <title>Config page</title>
 
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
+
 <!--
 <script src="app-config.js"></script>
-<script src="js/storage.js"></script>
-<script src="js/model.js"></script>
-<script src="js/importExport.js"></script>
+<script src="js/base/storage.js"></script>
+<script src="js/base/model.js"></script>
+<script src="js/services/categoryService.js"></script>
+<script src="js/services/pointService.js"></script>
+<script src="js/services/importExport.js"></script>
+<script src="js/map-providers/ymapsProvider.js"></script>
+<script src="js/admin.js"></script>
 
 <link rel="stylesheet" href="components/tabbed/tabbed.less">
-
-<script src="components/points-map/points-map.js"></script>
 
 <link rel="stylesheet" href="components/point-data/point-data.less">
 <script src="components/point-data/point-data.js"></script>
@@ -26,25 +30,17 @@
 <link rel="stylesheet" href="components/points-editor/points-editor.less">
 <script src="components/points-editor/points-editor.js"></script>
 
-<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/base.less">
 <link rel="stylesheet" href="css/layout.css">
-<link rel="stylesheet" href="css/theme.css">
-
+<link rel="stylesheet" href="css/theme.less">
  -->
 
 <link rel="stylesheet" href="css/yms-app.css">
 <script src="js/yms-admin.min.js"></script>
 
-<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
-
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
-
 <link rel="stylesheet" href="lib/kladr/jquery.kladr.min.css">
 <script src="lib/kladr/jquery.kladr.min.js"></script>
-
-<script>
-  ymaps.ready(ymsApp.init, function(error) {alert("Error loading yandex maps: " + error.message)});
-</script>
 
 </head>
 
@@ -60,34 +56,35 @@
       </ul>
     </nav>
   </header>
-  <aside class="apphelp tabbed hidden-md">
+  <aside class="apphelp tabbed">
     <input class="tabbed__opener" type="checkbox" id="tabbedopener" checked>
     <label class="tabbed__bookmark" for="tabbedopener"></label>
     <article class="tabbed__content">
-      <input class="tabbed__switch" name="tabbed" id="lang1" type="radio" checked>
+      <input class="tabbed__switch" name="lang" id="lang1" type="radio" checked>
       <h4 class="tabbed__header"><label for="lang1">Ru</label></h4>
       <section class="tabbed__panel" lang="ru">
-        <h3 class="tabbed__section-header">Справка:</h3>
+        <h3>Справка:</h3>
         <p><img src="images/buttons/add_icon.jpg" alt="c"> - данный режим позволяет создавать объекты по клику на карте
           Объекты создаются по одному. Для создания нового нужно сохранить текущий.</p>
         <p><img src="images/buttons/edit_icon.png" alt="e"> - режим, при котором выбор объекта включает его редактирование</p>
         <p><img src="images/buttons/import_icon.png" alt="i"> - импорт объектов из csv файла</p>
         <p><img src="images/buttons/export_icon.png" alt="e"> - экспорт объектов в csv файл</p>
       </section>
-      <input class="tabbed__switch" name="tabbed" id="lang2" type="radio">
+      <input class="tabbed__switch" name="lang" id="lang2" type="radio">
       <h4 class="tabbed__header"><label for="lang2">En</label></h4>
       <section class="tabbed__panel" lang="en">
-        <h3 class="tabbed__section-header">Info:</h3>
-        <p><img src="images/buttons/add_icon.jpg" alt="c"> - cteate point</p>
+        <h3>Info:</h3>
+        <p><img src="images/buttons/add_icon.jpg" alt="c"> - create point</p>
         <p><img src="images/buttons/edit_icon.png" alt="e"> - edit point</p>
         <p><img src="images/buttons/import_icon.png" alt="i"> - import points from csv</p>
         <p><img src="images/buttons/export_icon.png" alt="e"> - export points to csv</p>
       </section>
     </article>
   </aside>
-  <main>
+  <main class="pointseditor">
     <div class="map-container">
       <div id="ymsMap"></div>
+      <div class="mainInfo info-hidden"></div>
     </div>
     <div class="pointseditor-pointdata point-data-wrapper">
       <form class="point-data" name="point_data" data-mode="hidden" autocomplete="off">

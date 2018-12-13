@@ -1,137 +1,105 @@
 "use strict"
 
-const ymsApp = (function() {
+const pointsEditor = function() {
+  var pointData, mapProvider, infoBlock;
 
-  // TODO modify state handling
-  const AppState = Object.freeze({
+  const State = Object.freeze({
     VIEW: 1,
     CREATE: 2,
     EDIT: 3
   });
-
-  var currentState = AppState.VIEW;
+  var currentState = State.VIEW;
 
   function setState(state) {
     if (state == currentState) return;
 
-    //clearCurrentState();
+    clearCurrentState();
+
     switch (state) {
-      case AppState.VIEW:
-        pointsMap.toViewMode(currentState);
-        pointDataForm.clear();
-        pointDataForm.hide();
+      case State.VIEW:
+        pointData.hide();
         break;
-
-      case AppState.CREATE:
-        pointsMap.toCreateMode(currentState);
-        pointDataForm.clear();
-        pointDataForm.toCreateMode();
+      case State.CREATE:
+        mapProvider.setCreate(true);
+        pointData.toCreateMode();
         break;
-
-      case AppState.EDIT:
-        pointsMap.toEditMode(currentState);
-        pointDataForm.toEditMode();
+      case State.EDIT:
+        mapProvider.setEdit(true);
+        pointData.toEditMode();
         break;
-
       default: throw new Error("Invalid app state provided");
     }
 
     currentState = state;
   }
 
-  /*function clearCurrentState() {
+  function clearCurrentState() {
     switch (currentState) {
-      case AppState.VIEW:
+      case State.VIEW:
+        pointData.clear();
         break;
-      case AppState.CREATE:
+      case State.CREATE:
+        mapProvider.setCreate(false);
+        pointData.clear();
         break;
-      case AppState.EDIT:
-        pointDataForm.clear();
+      case State.EDIT:
+        mapProvider.setEdit(false);
+        pointData.clear();
         break;
     }
-  }*/
+  }
+
+
+  function viewPoint(point) {
+    pointData.setPoint(point);
+  }
+
+  function savePoint() {
+    if (!mapProvider.getCurrentPoint()) {
+      infoBlock.showWarning("No point selected");
+    } else {
+      var point = pointData.getPoint();
+      mapProvider.saveCurrentPoint(point);
+      pointData.clear();
+      infoBlock.showInfo("Saved");
+    }
+  }
+
+  function removePoint() {
+    var point = mapProvider.getCurrentPoint();
+    if (!point) {
+      infoBlock.showWarning("No point selected");
+    } else {
+      mapProvider.removeCurrentPoint();
+      pointData.clear();
+      infoBlock.showInfo("Removed");
+    }
+  }
+
+
+  function init(pointData_, mapProvider_, infoBlock_) {
+    [pointData, mapProvider, infoBlock] = [pointData_, mapProvider_, infoBlock_];
+
+    mapProvider.createMap();
+    mapProvider.addPoints(pointService.getAll());
+
+    mapProvider.initControls({
+      createOn: () => setState(State.CREATE),
+      createOff: () => setState(State.VIEW),
+      editOn: () => setState(State.EDIT),
+      editOff: () => setState(State.VIEW)
+    });
+
+    mapProvider.initExtCallbacks({
+      onPointEdit: () => viewPoint(mapProvider.getCurrentPoint())
+    });
+  }
+
 
   return {
-    AppState: AppState,
-    setState: setState
+    savePoint: savePoint,
+    removePoint: removePoint,
+    init: init
   }
 
-})();
-
-
-(function(app, config) {
-  /*app.action = function(newAction) {
-    if (newAction) formAction = newAction;
-    else return formAction;
-  }*/
-  /*Object.defineProperty(app, "action", {
-    get: function() { return formAction; },
-    set: function(newAction) { formAction = newAction; }
-  });*/
-
-  app.init = function() {
-    var infoBlock = createInfoBlock(document.querySelector(".map-container"));
-    app.showInfo = infoBlock.showInfo;
-    window.addEventListener("error", err => infoBlock.showError(err));
-
-    pointsMap.init(app, config);
-    pointDataForm.init(app);
-
-    app.displayPoint = function(point) {
-      pointToForm(point, pointDataForm);
-    }
-
-    app.savePoint = function() {
-      var point = pointsMap.getCurrentPoint();
-      if (!point) {
-        infoBlock.showWarning("No point selected");
-      } else {
-        formToPoint(pointDataForm, point);
-        pointsMap.saveCurrentPoint();
-        pointDataForm.clear();
-        infoBlock.showInfo("Saved");
-      }
-    }
-
-    app.removePoint = function() {
-      var point = pointsMap.getCurrentPoint();
-      if (!point) {
-        infoBlock.showWarning("No point selected");
-      } else {
-        pointsMap.removeCurrentPoint();
-        pointDataForm.clear();
-        infoBlock.showInfo("Removed");
-      }
-    }
-  }
-
-
-  function formToPoint(pointDataForm, point) {
-    var elements = pointDataForm.getElements();
-    for (var i = 0; i < elements.length; i++) {
-      if (!["submit", "button", "file"].includes(elements[i].type))
-        point.properties.set(elements[i].name, elements[i].value);
-    };
-
-    // sync geo object specific props
-    var pointName = elements[config.nameField].value;
-    point.properties.set("iconContent", pointName);
-
-    // store image
-    var img = pointDataForm.getImg();
-    if (img) storage.saveImage(pointName, img.src);
-  }
-
-  function pointToForm(point, pointDataForm) {
-    var elements = pointDataForm.getElements();
-    for (var i = 0; i < elements.length; i++) {
-      if (!["submit", "file"].includes(elements[i].type))
-        elements[i].value = point.properties.get(elements[i].name) || ""; // clear 'undefineds'
-    };
-
-    // retrieve image
-    var pointName = point.properties.get("iconContent");
-    pointDataForm.setImg(storage.getImage(pointName));
-  }
-
-}(ymsApp, appConfig));
+}();

@@ -1,0 +1,35 @@
+main {
+  display: flex;
+}
+
+@media (min-width: 769px) {
+  .categories {
+    flex: 1;
+    margin-right: 1em;
+  }
+  #mainMap {
+    flex: 3;
+    height: 600px;
+  }
+}
+@media (min-width: 481px) and (max-width: 768px) {
+  .categories {
+    flex: 1;
+  }
+  #mainMap {
+    flex: 2;
+    height: 400px;
+  }
+}
+@media (max-width: 480px) {
+  main {
+    flex-direction: column-reverse;
+  }
+  .categories {
+    flex: none;
+  }
+  #mainMap {
+    flex: none;
+    height: 300px;
+  }
+}

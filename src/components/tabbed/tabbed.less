@@ -1,8 +1,6 @@
-
 .tabbed__content {
-  border: 1px solid lightslategray;
   overflow: hidden;
-  background-color: white;
+  background-color: inherit;
 }
 .tabbed__bookmark {
   float: right;
@@ -38,16 +36,12 @@
 .tabbed__switch:checked + .tabbed__header {
   z-index: 3;
 }
-.tabbed__section-header {
-  margin: 0;
-}
 .tabbed__header {
   position: relative;
   z-index: 1;
   float: left;
   line-height: 2.5em;
   border-right: 1px solid lightslategray;
-  margin: 0;
   background-color: inherit;
 }
 .tabbed__header:first-of-type {

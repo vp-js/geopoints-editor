@@ -3,34 +3,36 @@
 <head>
   <meta charset="utf-8"/>
   <title>Main page</title>
+
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
 <!--
 <link rel="stylesheet" href="css/base.less">
 <link rel="stylesheet" href="css/layout.css">
-<link rel="stylesheet" href="css/main.less">
-
-<link rel="stylesheet" href="components/tabbed/tabbed.less">
 
 <script src="app-config.js"></script>
-<script src="js/importExport.js"></script>
-<script src="js/storage.js"></script>
-<script src="js/model.js"></script>
-
-<link rel="stylesheet" href="components/categories-list/categories-list.less">
-<script src="components/categories-list/categories-list.js"></script>
-
+<script src="js/base/storage.js"></script>
+<script src="js/base/model.js"></script>
+<script src="js/services/importExport.js"></script>
+<script src="js/services/categoryService.js"></script>
+<script src="js/services/pointService.js"></script>
 <script src="js/main.js"></script>
 
+<link rel="stylesheet" href="components/tabbed/tabbed.less">
+<link rel="stylesheet" href="components/categories-list/categories-list.less">
+<script src="components/categories-list/categories-list.js"></script>
+<script src="components/main-map/main-map.js"></script>
+<link rel="stylesheet" href="components/main-map/main.less">
  -->
 
 <link rel="stylesheet" href="css/yms-app.css">
 <script src="js/yms-main.min.js"></script>
 
-<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
 
-<script>
-  ymaps.ready(ymsMain.init, function(error) {alert("Error loading ymaps: " + error)});
-</script>
-
+<!--
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script src="lib/jquery.i18n.js"></script>
+<script src="lib/jquery.i18n.messagestore.js"></script>
+ -->
 
 </head>
 <body style="overflow-y: scroll;">
@@ -39,37 +41,39 @@
       <a class="menu-logo" href="/">Geopoints editor</a>
       <ul class="menu-main">
         <li>
-          <a href="admin.html">Config page</a>
+          <a href="admin.html" data-i18n="msg-config">Config page</a>
         </li>
       </ul>
     </nav>
   </header>
 
-  <aside class="apphelp tabbed hidden-md">
+  <aside class="apphelp tabbed">
     <input class="tabbed__opener" type="checkbox" id="tabbedopener" checked>
     <label class="tabbed__bookmark" for="tabbedopener"></label>
     <article class="tabbed__content">
       <input class="tabbed__switch" name="tabbed" id="lang1" type="radio" checked>
       <h4 class="tabbed__header"><label for="lang1">Ru</label></h4>
       <section class="tabbed__panel">
-        <h3 class="tabbed__section-header">Справка:</h3>
-        <p>Выберите категорию - соответствующие объекты будут отображены на карте</p>
+        <h3>Справка:</h3>
+        <p>Выберите категорию, затем подкатегорию - соответствующие объекты будут отображены на карте</p>
         <p>Для создания новых объектов перейдите на страницу конфигурации (Config page)</p>
       </section>
       <input class="tabbed__switch" name="tabbed" id="lang2" type="radio">
       <h4 class="tabbed__header"><label for="lang2">En</label></h4>
       <section class="tabbed__panel">
-        <h3 class="tabbed__section-header">Info:</h3>
+        <h3>Info:</h3>
         <p>Select a category to view objects</p>
         <p>Click "Config page" to create new objects</p>
       </section>
     </article>
   </aside>
 
-  <aside class="dyn-options hidden-md">
-    <h4>Display options</h4>
-    <label><input type="checkbox" id="animateMenu" checked autocomplete="off"> Animate Menu</label>
-    <label><input type="checkbox" id="useCustomImages" autocomplete="off"> Custom Images</label>
+  <aside class="dyn-options l-right">
+    <section>
+      <h4>Display options</h4>
+      <p><label><input type="checkbox" id="animateMenu" checked autocomplete="off"> Animate Menu</label></p>
+      <p><label><input type="checkbox" id="useCustomImages" autocomplete="off"> Custom Images</label></p>
+    </section>
   </aside>
 
   <main>

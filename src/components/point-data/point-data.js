@@ -1,37 +1,41 @@
 "use strict"
 
-var pointDataForm = (function() {
-  var formWrapper, formElem, imgUpload;
+var pointData = function() {
+  var formElem, imgUpload;
 
-  function init(app) {
-    formElem = document.forms.point_data;
-    //formWrapper = document.closest(".point-data-wrapper");
-    imgUpload = ImageUpload.createImageUploadElem(formElem);
+  function init(pointsEditor, form) {
+    formElem = form;
     renderCategoriesSelect(formElem.elements.category);
-
-    var selectedAction;
-    formElem.elements.action.forEach(btn => btn.onclick = function(e) {selectedAction = this.value});
+    imgUpload = ImageUpload.createImageUploadElem(formElem);
 
     // autocomplete town by KLADR
-    $(formElem.elements.town).kladr({type: $.kladr.type.city, typeCode: $.kladr.typeCode.city});
+    $(formElem.elements.town).kladr({
+      type: $.kladr.type.city,
+      typeCode: $.kladr.typeCode.city
+    });
 
+    // modify submit behavior
+    var selectedAction;
+    formElem.elements.action.forEach(
+      btn => btn.onclick = function(e) {
+        selectedAction = this.value;
+    });
     formElem.onsubmit = function(e) {
       e.preventDefault();
       switch (selectedAction) {
-        case "save": app.savePoint(); break;
-        case "remove": app.removePoint(); break;
+        case "save": pointsEditor.savePoint(); break;
+        case "remove": pointsEditor.removePoint(); break;
         default: throw new Error("No handler for this form action");
       }
     }
 
-    // customize field msg
+    // customize fields validation msg
     formElem.addEventListener("invalid", function(e) {
       var elem = e.target;
       if (elem.title && !elem.validity.valid) {
         elem.setCustomValidity(elem.title);
       }
     }, true);
-
     formElem.addEventListener("input", function(e) {
       var elem = e.target;
       if (elem.title && !elem.validity.valid) {
@@ -39,6 +43,7 @@ var pointDataForm = (function() {
       }
     }, false);
   }
+
 
   function toCreateMode() {
     formElem.dataset.mode = "create";
@@ -52,7 +57,7 @@ var pointDataForm = (function() {
 
 
   function renderCategoriesSelect(selectElem) {
-    renderOptions(Category.createCtgsHierarchy(), selectElem, "");
+    renderOptions(categoryService.createCtgsHierarchy(), selectElem, "");
     selectElem.setAttribute("required", "");
 
     var defaultIsSet = false;
@@ -73,18 +78,41 @@ var pointDataForm = (function() {
     }
   }
 
+  function getPoint() {
+    var elements = formElem.elements;
+    var point = Point.create();
+    for (var i = 0; i < elements.length; i++) {
+      if (!["submit", "button", "file"].includes(elements[i].type))
+        point[elements[i].name] = elements[i].value;
+    }
+
+    // store image
+    var img = imgUpload.getImgElem();
+    if (img) pointService.savePointImage(point.getId(), img.src);
+
+    return point;
+  }
+
+  function setPoint(point) {
+    var elements = formElem.elements;
+    for (var i = 0; i < elements.length; i++) {
+      if (!["submit", "button", "file"].includes(elements[i].type))
+        elements[i].value = point[elements[i].name] || ""; // clear 'undefineds'
+    }
+
+    // retrieve image
+    var imgSrc = pointService.getPointImage(point.getId());
+    imgUpload.createImgElem(imgSrc || null);
+  }
 
   return {
     toCreateMode: toCreateMode,
     toEditMode: toEditMode,
     hide: hide,
-
-    getElements: () => formElem.elements,
     clear: () => formElem.reset(),
-    getImg: () => imgUpload.getImgElem(),
-    setImg: (imgSrc) => imgUpload.createImgElem(imgSrc || null),
-
+    setPoint: setPoint,
+    getPoint: getPoint,
     init: init
   }
 
-}());
+}();

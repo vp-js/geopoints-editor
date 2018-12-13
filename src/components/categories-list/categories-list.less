@@ -5,53 +5,52 @@
   -ms-user-select: none;
    user-select: none;
 }
+.categories a {
+  pointer-events: none;
+}
 .categories ul {
   overflow: hidden;
   transition: height .4s ease;
 }
-.categories .is-collapsed {
-  height: 0;
+.categories li:not(:first-child) {
+  border-top: solid lightgray 1px;
 }
 .categories img {
   vertical-align: middle;
   height: 1.5em;
-  margin: 0 0.5em;
+  margin: 0 0.25em;
   pointer-events: none;
 }
 .categories.images-hidden img {
   display: none;
 }
+.categories .is-collapsed {
+  height: 0;
+}
 
-.categories-list > li {
-  padding-bottom: 0.5em;
-  border-bottom: solid lightgray 1px;
+.categories-list .category {
+  padding: 0.5em;
+}
+.subcategories-list > li {
+  margin: 3px 0;
 }
 .subcategories-list .category {
+  position: relative;
   padding-left: 1em;
-  margin: 2px 0;
   border: solid lightgray 1px;
   border-radius: 2px;
   background-color: #F5F5F5;
 }
 .subcategories-list .category:not(:only-child):after {
   content: "▾";
-  float: right;
-}
-
-.category {
-  padding: 0.5em;
-}
-.category a {
-  pointer-events: none;
+  position: absolute;
+  right: 3px;
 }
 
 .category-items li {
-  padding: 0.4em 1em;
+  padding: 0.5em 1em;
   color: #3DA8DF;
 }
 .category-items li:hover {
   text-decoration: underline;
-}
-.category-items li:not(:first-child) {
-  border-top: solid lightgray 1px;
 }

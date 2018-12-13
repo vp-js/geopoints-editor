@@ -1,17 +1,14 @@
 const appConfig = {
 
-  // goes as icon content for placemark on map, for training/demo purposes use as id
-  nameField: "name",
-
-  mapCenter: [54.8, 32],
-  mapZoom: 11,
-  autoFitToViewport: "ifNull", //"always",
-  suppressMapOpenBlock: true,
-
-  imgStoragePrefix: "image_",
-  imgFolder: "images/",
-  imageStub: "No_Image_Available.png",
-  demoImgFolder: "data/pcts for demos/",
+  mapConfig: {
+    mainMapElemId: "mainMap",
+    editMapElemId: "ymsMap",
+    smallSizeBreakpoint: 400,
+    mapCenter: [54.8, 32],
+    mapZoom: 11,
+    autoFitToViewport: "ifNull",
+    suppressMapOpenBlock: true
+  },
 
   pointsConfig: {
     color: {
@@ -22,10 +19,13 @@ const appConfig = {
     defaultPreset: "islands#greenStretchyIcon"
   },
 
+  // goes as icon content for placemark on map, for training/demo purposes use as id
+  idField: "name",
+
   balloonLayout: [
     "<div style='width: 250px'>",
       "<img style='float: right; height: 70px; width: 70px; max-width: 100px;'",
-        "src={{properties.name|getImage:'')}}",
+        "src={{properties.name|getImage: ''}} alt='No image'",
         ">",
       "<h3>{{properties.name}}</h3>",
       "<b>Town: </b> {{properties.town}}<br>",
@@ -39,7 +39,14 @@ const appConfig = {
     "</div>"
   ].join('\n'),
 
+  imagesConfig: {
+    imgStoragePrefix: "image_",
+    imgFolder: "images/",
+    imageStub: "No_Image_Available.png"
+  },
 
+
+  // values: localdev, demo
   appMode: "demo"
 
 };

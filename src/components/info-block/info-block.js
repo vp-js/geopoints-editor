@@ -1,7 +1,7 @@
 "use strict"
 
-function createInfoBlock(containerElem) {
-  if (!containerElem) throw new Error("No element provided for info messages displaying");
+function createInfoBlock(elem) {
+  if (!elem) throw new Error("No element provided for info messages displaying");
 
   // to start message disappearing by js not css due to css transition limitations
   // TODO investigate css transition interruptions more
@@ -14,23 +14,10 @@ function createInfoBlock(containerElem) {
   };
   var msgDisplayTimer;
 
-  var elem = document.createElement("div");
   elem.classList.add("info", "info-hidden");
-  containerElem.appendChild(elem);
-
-
-  /*elem.ontransitionend = () => {
-    if (!elem.classList.contains("info-hidden")) {
-      elem.classList.add("info-hidden");
-    };
-  };*/
 
   function showMessage(bLogToConsole, color, message) {
     if (bLogToConsole) {
-      /*if (message instanceof Error) {
-        console.log(message.stack);
-      } else {
-      }*/
       console.log(message);
       message = "Intrenal error occured";
     }
@@ -61,7 +48,4 @@ function createInfoBlock(containerElem) {
     showWarning: showMessage.bind(null, false, MsgColors.WARN),
     showError: showMessage.bind(null, true, MsgColors.ERR)
   }
-  /*this.showInfo = showMessage.bind(null, false, MsgColors.INFO);
-  this.showWarning = showMessage.bind(null, false, MsgColors.WARN);
-  this.showError = showMessage.bind(null, true, MsgColors.ERR);*/
 }
